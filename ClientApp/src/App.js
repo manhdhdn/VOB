@@ -1,8 +1,8 @@
 import React from 'react';
 function App() {
   return (
-    <div className="App">
-      adawdadadw
+    <div className="w-screen h-screen items-center justify-start bg-slate-900">
+    
     </div>
   );
 }
