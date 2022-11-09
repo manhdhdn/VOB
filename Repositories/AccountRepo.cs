@@ -3,53 +3,72 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using VOB.Data.Context;
+using VOB.Models;
 
 namespace VOB.Repositories
 {
     public class AccountRepo : IAccountRepo
     {
-        private readonly DataContext _dataContext;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AccountRepo(DataContext dataContext,
-                           UserManager<IdentityUser> userManager,
-                           SignInManager<IdentityUser> signInManager,
+        public AccountRepo(UserManager<ApplicationUser> userManager,
+                           SignInManager<ApplicationUser> signInManager,
+                           RoleManager<IdentityRole> roleManager,
                            IConfiguration configuration)
         {
-            _dataContext = dataContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _configuration = configuration;
         }
 
-        public async Task<IdentityResult> SignUp(string email, string roleID, string password)
+        public async Task CreateRolesAsync(string roleName)
         {
-            var user = new IdentityUser()
+            var roleExit = await _roleManager.RoleExistsAsync(roleName);
+
+            if (!roleExit)
             {
-                UserName = email,
-                Email = email
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
+
+        public async Task<IdentityResult> SignUp(SignUpModel signUp)
+        {
+            var user = new ApplicationUser()
+            {
+                UserName = signUp.Email,
+                Email = signUp.Email,
+                FirstName = signUp.FirstName,
+                LastName = signUp.LastName,
+                PhoneNumber = signUp.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, signUp.Password);
 
             if (result.Succeeded)
             {
-                // Add user to role here.
+                result = await _userManager.AddToRoleAsync(user, (await _roleManager.FindByIdAsync(signUp.RoleId)).Name);
             }
 
             return result;
         }
 
-        public async Task<string?> SignIn(string email, string password)
+        public async Task<SignInRs?> SignIn(string email, string password)
         {
             var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
 
             if (!result.Succeeded)
             {
-                return result.IsNotAllowed ? "Require Confirmed Account" : null;
+                return result.IsNotAllowed ?
+                    new SignInRs()
+                    {
+                        User = null,
+                        Token = "Require confirmed account"
+                    }
+                    : null;
             }
 
             var user = await _userManager.FindByEmailAsync(email);
@@ -72,7 +91,11 @@ namespace VOB.Repositories
                 signingCredentials: new SigningCredentials(authSignKey, SecurityAlgorithms.HmacSha256Signature)
                 );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new SignInRs()
+            {
+                User = user,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
         }
     }
 }

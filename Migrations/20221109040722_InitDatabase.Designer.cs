@@ -11,7 +11,7 @@ using VOB.Data.Context;
 namespace VOB.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221107082615_InitDatabase")]
+    [Migration("20221109040722_InitDatabase")]
     partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

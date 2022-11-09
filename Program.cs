@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using VOB.Data.Context;
 using VOB.Filter;
+using VOB.Models;
 using VOB.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Add Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 

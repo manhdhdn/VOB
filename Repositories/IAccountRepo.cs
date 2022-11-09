@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using VOB.Models;
 
 namespace VOB.Repositories
 {
     public interface IAccountRepo
     {
-        Task<IdentityResult> SignUp(string email, string roleID, string password);
-        Task<string?> SignIn([FromBody] string email, string password);
+        Task CreateRolesAsync(string roleName);
+        Task<IdentityResult> SignUp(SignUpModel signUp);
+        Task<SignInRs?> SignIn(string email, string password);
     }
 }
