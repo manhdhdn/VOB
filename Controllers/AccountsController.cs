@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VOB.Data.Context;
 using VOB.Models;
 using VOB.Repositories;
@@ -11,12 +13,21 @@ namespace VOB.Controllers
     {
         private readonly DataContext _context;
         private readonly IAccountRepo _accountRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountsController(DataContext context,
-                                  IAccountRepo accountRepo)
+                                  IAccountRepo accountRepo,
+                                  UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _accountRepo = accountRepo;
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<ApplicationUser> GetAccount(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
         }
 
         [HttpPost("CreateRolesBase")]
@@ -29,7 +40,7 @@ namespace VOB.Controllers
 
             if (code.Equals("Abc@123"))
             {
-                var roles = new List<string>() { "Admin", "Owner", "User" };
+                var roles = new List<string>() { "Admin", "Owner", "Player" };
 
                 foreach (var role in roles)
                 {

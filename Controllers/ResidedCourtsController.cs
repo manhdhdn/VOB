@@ -12,47 +12,47 @@ namespace VOB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtsController : ControllerBase
+    public class ResidedCourtsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public CourtsController(DataContext context)
+        public ResidedCourtsController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Courts
+        // GET: api/ResidedCourts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Court>>> GetCourts()
+        public async Task<ActionResult<IEnumerable<ResidedCourt>>> GetResidedCourt()
         {
-            return await _context.Courts.ToListAsync();
+            return await _context.ResidedCourt.ToListAsync();
         }
 
-        // GET: api/Courts/5
+        // GET: api/ResidedCourts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Court>> GetCourt(Guid id)
+        public async Task<ActionResult<ResidedCourt>> GetResidedCourt(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
+            var residedCourt = await _context.ResidedCourt.FindAsync(id);
 
-            if (court == null)
+            if (residedCourt == null)
             {
                 return NotFound();
             }
 
-            return court;
+            return residedCourt;
         }
 
-        // PUT: api/Courts/5
+        // PUT: api/ResidedCourts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourt(Guid id, Court court)
+        public async Task<IActionResult> PutResidedCourt(Guid id, ResidedCourt residedCourt)
         {
-            if (id != court.Id)
+            if (id != residedCourt.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(court).State = EntityState.Modified;
+            _context.Entry(residedCourt).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace VOB.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourtExists(id))
+                if (!ResidedCourtExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace VOB.Controllers
             return NoContent();
         }
 
-        // POST: api/Courts
+        // POST: api/ResidedCourts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Court>> PostCourt(Court court)
+        public async Task<ActionResult<ResidedCourt>> PostResidedCourt(ResidedCourt residedCourt)
         {
-            _context.Courts.Add(court);
+            _context.ResidedCourt.Add(residedCourt);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourt", new { id = court.Id }, court);
+            return CreatedAtAction("GetResidedCourt", new { id = residedCourt.Id }, residedCourt);
         }
 
-        // DELETE: api/Courts/5
+        // DELETE: api/ResidedCourts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourt(Guid id)
+        public async Task<IActionResult> DeleteResidedCourt(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
-            if (court == null)
+            var residedCourt = await _context.ResidedCourt.FindAsync(id);
+            if (residedCourt == null)
             {
                 return NotFound();
             }
 
-            _context.Courts.Remove(court);
+            _context.ResidedCourt.Remove(residedCourt);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CourtExists(Guid id)
+        private bool ResidedCourtExists(Guid id)
         {
-            return _context.Courts.Any(e => e.Id == id);
+            return _context.ResidedCourt.Any(e => e.Id == id);
         }
     }
 }

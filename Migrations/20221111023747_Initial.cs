@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VOB.Migrations
 {
-    public partial class InitDatabase : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,8 @@ namespace VOB.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -49,15 +51,16 @@ namespace VOB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Courts",
+                name: "Policy",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Describle = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Courts", x => x.Id);
+                    table.PrimaryKey("PK_Policy", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +169,73 @@ namespace VOB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Courts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Describle = table.Column<string>(type: "TEXT", nullable: false),
+                    ContactNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    PolicyId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courts_Policy_PolicyId",
+                        column: x => x.PolicyId,
+                        principalTable: "Policy",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResidedCourt",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Size = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    CourtId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResidedCourt", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResidedCourt_Courts_CourtId",
+                        column: x => x.CourtId,
+                        principalTable: "Courts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: false),
+                    CourtId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ResidedCourtId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photo_Courts_CourtId",
+                        column: x => x.CourtId,
+                        principalTable: "Courts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Photo_ResidedCourt_ResidedCourtId",
+                        column: x => x.ResidedCourtId,
+                        principalTable: "ResidedCourt",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -202,6 +272,26 @@ namespace VOB.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courts_PolicyId",
+                table: "Courts",
+                column: "PolicyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photo_CourtId",
+                table: "Photo",
+                column: "CourtId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photo_ResidedCourtId",
+                table: "Photo",
+                column: "ResidedCourtId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResidedCourt_CourtId",
+                table: "ResidedCourt",
+                column: "CourtId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -222,13 +312,22 @@ namespace VOB.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Courts");
+                name: "Photo");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ResidedCourt");
+
+            migrationBuilder.DropTable(
+                name: "Courts");
+
+            migrationBuilder.DropTable(
+                name: "Policy");
         }
     }
 }

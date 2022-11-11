@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VOB.Models;
+using VOB.Data;
 
 namespace VOB.Data.Context
 {
@@ -12,5 +13,7 @@ namespace VOB.Data.Context
         }
 
         public virtual DbSet<Court> Courts { get; set; } = null!;
+        public virtual DbSet<Policy> Policy { get; set; } = null!;
+        public virtual DbSet<ResidedCourt> ResidedCourt { get; set; } = null!;
     }
 }

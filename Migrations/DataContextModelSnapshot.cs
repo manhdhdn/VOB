@@ -147,17 +147,105 @@ namespace VOB.Migrations
 
             modelBuilder.Entity("VOB.Data.Court", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CourtName")
+                    b.Property<string>("ContactNumber")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Name");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Describle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PolicyId");
+
                     b.ToTable("Courts");
+                });
+
+            modelBuilder.Entity("VOB.Data.Photo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("CourtId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ResidedCourtId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourtId");
+
+                    b.HasIndex("ResidedCourtId");
+
+                    b.ToTable("Photo");
+                });
+
+            modelBuilder.Entity("VOB.Data.Policy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Describle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Policy");
+                });
+
+            modelBuilder.Entity("VOB.Data.ResidedCourt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CourtId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourtId");
+
+                    b.ToTable("ResidedCourt");
                 });
 
             modelBuilder.Entity("VOB.Models.ApplicationUser", b =>
@@ -281,6 +369,55 @@ namespace VOB.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("VOB.Data.Court", b =>
+                {
+                    b.HasOne("VOB.Data.Policy", "Policy")
+                        .WithMany()
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
+                });
+
+            modelBuilder.Entity("VOB.Data.Photo", b =>
+                {
+                    b.HasOne("VOB.Data.Court", "Court")
+                        .WithMany("Photos")
+                        .HasForeignKey("CourtId");
+
+                    b.HasOne("VOB.Data.ResidedCourt", "ResidedCourt")
+                        .WithMany("Photos")
+                        .HasForeignKey("ResidedCourtId");
+
+                    b.Navigation("Court");
+
+                    b.Navigation("ResidedCourt");
+                });
+
+            modelBuilder.Entity("VOB.Data.ResidedCourt", b =>
+                {
+                    b.HasOne("VOB.Data.Court", "Court")
+                        .WithMany("ResidedCourts")
+                        .HasForeignKey("CourtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Court");
+                });
+
+            modelBuilder.Entity("VOB.Data.Court", b =>
+                {
+                    b.Navigation("Photos");
+
+                    b.Navigation("ResidedCourts");
+                });
+
+            modelBuilder.Entity("VOB.Data.ResidedCourt", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }
