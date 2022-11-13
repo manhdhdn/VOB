@@ -1,6 +1,8 @@
 import { React, useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { Link } from 'react-router-dom';
+import LoginModal from '../Modal/LoginModal';
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
@@ -24,6 +26,9 @@ const Navbar = () => {
                                     <Link className='text-color-nav font-bold' to={'/sssss'}>Tập luyện</Link>
                                 </div>
                             </div>
+                        </div>
+                        <div className='flex items-center justify-end'>
+                                    <LoginModal/>
                         </div>
                         <div className="-mr-2 flex md:hidden">
                             <button

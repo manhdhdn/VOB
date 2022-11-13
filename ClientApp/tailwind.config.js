@@ -4,8 +4,13 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        '700': '800px',
+        '700':'800px',
+        '600':'600px',
       },
+      width: {
+       '90': '90%'
+      },
+
       screens: {
         sm: "640px",
         md: "768px",
