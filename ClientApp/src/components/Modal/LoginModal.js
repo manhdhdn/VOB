@@ -39,7 +39,7 @@ const LoginModal = () => {
                     <TextField type="password" className='' fullWidth id="Email" />
 
                     <div className='mt-10'>
-                        <Button className='w-full' variant="contained">Login</Button>
+                        <Button className='w-full shadow-lg shadow-blue-500/50' variant="contained">Login</Button>
                     </div>
                 </div>
             </Modal>
