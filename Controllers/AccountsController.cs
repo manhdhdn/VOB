@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using VOB.Data.Context;
 using VOB.Models;
 using VOB.Repositories;
@@ -11,23 +10,12 @@ namespace VOB.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IAccountRepo _accountRepo;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountsController(DataContext context,
-                                  IAccountRepo accountRepo,
-                                  UserManager<ApplicationUser> userManager)
+                                  IAccountRepo accountRepo)
         {
-            _context = context;
             _accountRepo = accountRepo;
-            _userManager = userManager;
-        }
-
-        [HttpGet]
-        public async Task<ApplicationUser> GetAccount(string email)
-        {
-            return await _userManager.FindByEmailAsync(email);
         }
 
         [HttpPost("CreateRolesBase")]

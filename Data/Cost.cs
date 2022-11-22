@@ -10,6 +10,10 @@ namespace VOB.Data
 
         [ForeignKey("Unit")]
         public Guid UnitId { get; set; }
-        public virtual Unit? Unit { get; set; } = null!;
+        public virtual Unit? Unit { get; set; }
+
+        [ForeignKey("ResidedCourt")]
+        public Guid ResidedCourtId { get; set; }
+        public virtual ResidedCourt? ResidedCourt { get; set; } 
     }
 }

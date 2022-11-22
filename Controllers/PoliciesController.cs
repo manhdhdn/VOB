@@ -2,55 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using VOB.Data;
 using VOB.Data.Context;
-using VOB.Repositories;
 
 namespace VOB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtsController : ControllerBase
+    public class PoliciesController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public CourtsController(DataContext context)
+        public PoliciesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Courts
+        // GET: api/Policies
         [HttpGet]
-        public async Task<ActionResult<PagedRepo<Court>>> GetCourts(int? pageIndex, int? pageSize)
+        public async Task<ActionResult<IEnumerable<Policy>>> GetPolicy()
         {
-            var source = _context.Courts.AsQueryable();
-
-            return await PagedRepo<Court>.PagingAsync(source, pageIndex ?? 1, pageSize ?? 6);
+            return await _context.Policy.ToListAsync();
         }
 
-        // GET: api/Courts/5
+        // GET: api/Policies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Court>> GetCourt(Guid id)
+        public async Task<ActionResult<Policy>> GetPolicy(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
+            var policy = await _context.Policy.FindAsync(id);
 
-            if (court == null)
+            if (policy == null)
             {
                 return NotFound();
             }
 
-            return court;
+            return policy;
         }
 
-        // PUT: api/Courts/5
+        // PUT: api/Policies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourt(Guid id, Court court)
+        public async Task<IActionResult> PutPolicy(Guid id, Policy policy)
         {
-            if (id != court.Id)
+            if (id != policy.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(court).State = EntityState.Modified;
+            _context.Entry(policy).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +55,7 @@ namespace VOB.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourtExists(id))
+                if (!PolicyExists(id))
                 {
                     return NotFound();
                 }
@@ -71,36 +68,36 @@ namespace VOB.Controllers
             return NoContent();
         }
 
-        // POST: api/Courts
+        // POST: api/Policies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Court>> PostCourt(Court court)
+        public async Task<ActionResult<Policy>> PostPolicy(Policy policy)
         {
-            _context.Courts.Add(court);
+            _context.Policy.Add(policy);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourt", new { id = court.Id }, court);
+            return CreatedAtAction("GetPolicy", new { id = policy.Id }, policy);
         }
 
-        // DELETE: api/Courts/5
+        // DELETE: api/Policies/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourt(Guid id)
+        public async Task<IActionResult> DeletePolicy(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
-            if (court == null)
+            var policy = await _context.Policy.FindAsync(id);
+            if (policy == null)
             {
                 return NotFound();
             }
 
-            _context.Courts.Remove(court);
+            _context.Policy.Remove(policy);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CourtExists(Guid id)
+        private bool PolicyExists(Guid id)
         {
-            return _context.Courts.Any(e => e.Id == id);
+            return _context.Policy.Any(e => e.Id == id);
         }
     }
 }

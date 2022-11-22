@@ -2,55 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using VOB.Data;
 using VOB.Data.Context;
-using VOB.Repositories;
 
 namespace VOB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtsController : ControllerBase
+    public class BookingsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public CourtsController(DataContext context)
+        public BookingsController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Courts
+        // GET: api/Bookings
         [HttpGet]
-        public async Task<ActionResult<PagedRepo<Court>>> GetCourts(int? pageIndex, int? pageSize)
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
-            var source = _context.Courts.AsQueryable();
-
-            return await PagedRepo<Court>.PagingAsync(source, pageIndex ?? 1, pageSize ?? 6);
+            return await _context.Bookings.ToListAsync();
         }
 
-        // GET: api/Courts/5
+        // GET: api/Bookings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Court>> GetCourt(Guid id)
+        public async Task<ActionResult<Booking>> GetBooking(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
+            var booking = await _context.Bookings.FindAsync(id);
 
-            if (court == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return court;
+            return booking;
         }
 
-        // PUT: api/Courts/5
+        // PUT: api/Bookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourt(Guid id, Court court)
+        public async Task<IActionResult> PutBooking(Guid id, Booking booking)
         {
-            if (id != court.Id)
+            if (id != booking.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(court).State = EntityState.Modified;
+            _context.Entry(booking).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +55,7 @@ namespace VOB.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourtExists(id))
+                if (!BookingExists(id))
                 {
                     return NotFound();
                 }
@@ -71,36 +68,36 @@ namespace VOB.Controllers
             return NoContent();
         }
 
-        // POST: api/Courts
+        // POST: api/Bookings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Court>> PostCourt(Court court)
+        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            _context.Courts.Add(court);
+            _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourt", new { id = court.Id }, court);
+            return CreatedAtAction("GetBooking", new { id = booking.Id }, booking);
         }
 
-        // DELETE: api/Courts/5
+        // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourt(Guid id)
+        public async Task<IActionResult> DeleteBooking(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
-            if (court == null)
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            _context.Courts.Remove(court);
+            _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CourtExists(Guid id)
+        private bool BookingExists(Guid id)
         {
-            return _context.Courts.Any(e => e.Id == id);
+            return _context.Bookings.Any(e => e.Id == id);
         }
     }
 }

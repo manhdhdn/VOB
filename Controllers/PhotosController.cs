@@ -2,55 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using VOB.Data;
 using VOB.Data.Context;
-using VOB.Repositories;
 
 namespace VOB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtsController : ControllerBase
+    public class PhotosController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public CourtsController(DataContext context)
+        public PhotosController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Courts
+        // GET: api/Photos
         [HttpGet]
-        public async Task<ActionResult<PagedRepo<Court>>> GetCourts(int? pageIndex, int? pageSize)
+        public async Task<ActionResult<IEnumerable<Photo>>> GetPhotos()
         {
-            var source = _context.Courts.AsQueryable();
-
-            return await PagedRepo<Court>.PagingAsync(source, pageIndex ?? 1, pageSize ?? 6);
+            return await _context.Photos.ToListAsync();
         }
 
-        // GET: api/Courts/5
+        // GET: api/Photos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Court>> GetCourt(Guid id)
+        public async Task<ActionResult<Photo>> GetPhoto(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
+            var photo = await _context.Photos.FindAsync(id);
 
-            if (court == null)
+            if (photo == null)
             {
                 return NotFound();
             }
 
-            return court;
+            return photo;
         }
 
-        // PUT: api/Courts/5
+        // PUT: api/Photos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourt(Guid id, Court court)
+        public async Task<IActionResult> PutPhoto(Guid id, Photo photo)
         {
-            if (id != court.Id)
+            if (id != photo.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(court).State = EntityState.Modified;
+            _context.Entry(photo).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +55,7 @@ namespace VOB.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourtExists(id))
+                if (!PhotoExists(id))
                 {
                     return NotFound();
                 }
@@ -71,36 +68,36 @@ namespace VOB.Controllers
             return NoContent();
         }
 
-        // POST: api/Courts
+        // POST: api/Photos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Court>> PostCourt(Court court)
+        public async Task<ActionResult<Photo>> PostPhoto(Photo photo)
         {
-            _context.Courts.Add(court);
+            _context.Photos.Add(photo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourt", new { id = court.Id }, court);
+            return CreatedAtAction("GetPhoto", new { id = photo.Id }, photo);
         }
 
-        // DELETE: api/Courts/5
+        // DELETE: api/Photos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourt(Guid id)
+        public async Task<IActionResult> DeletePhoto(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
-            if (court == null)
+            var photo = await _context.Photos.FindAsync(id);
+            if (photo == null)
             {
                 return NotFound();
             }
 
-            _context.Courts.Remove(court);
+            _context.Photos.Remove(photo);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CourtExists(Guid id)
+        private bool PhotoExists(Guid id)
         {
-            return _context.Courts.Any(e => e.Id == id);
+            return _context.Photos.Any(e => e.Id == id);
         }
     }
 }

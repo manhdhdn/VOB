@@ -17,6 +17,9 @@ namespace VOB.Data
         public virtual Court? Court { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public virtual ICollection<Cost>? Costs { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public virtual ICollection<Photo>? Photos { get; set; }
     }
 }

@@ -2,55 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using VOB.Data;
 using VOB.Data.Context;
-using VOB.Repositories;
 
 namespace VOB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourtsController : ControllerBase
+    public class CostsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public CourtsController(DataContext context)
+        public CostsController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Courts
+        // GET: api/Costs
         [HttpGet]
-        public async Task<ActionResult<PagedRepo<Court>>> GetCourts(int? pageIndex, int? pageSize)
+        public async Task<ActionResult<IEnumerable<Cost>>> GetCosts()
         {
-            var source = _context.Courts.AsQueryable();
-
-            return await PagedRepo<Court>.PagingAsync(source, pageIndex ?? 1, pageSize ?? 6);
+            return await _context.Costs.ToListAsync();
         }
 
-        // GET: api/Courts/5
+        // GET: api/Costs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Court>> GetCourt(Guid id)
+        public async Task<ActionResult<Cost>> GetCost(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
+            var cost = await _context.Costs.FindAsync(id);
 
-            if (court == null)
+            if (cost == null)
             {
                 return NotFound();
             }
 
-            return court;
+            return cost;
         }
 
-        // PUT: api/Courts/5
+        // PUT: api/Costs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourt(Guid id, Court court)
+        public async Task<IActionResult> PutCost(Guid id, Cost cost)
         {
-            if (id != court.Id)
+            if (id != cost.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(court).State = EntityState.Modified;
+            _context.Entry(cost).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +55,7 @@ namespace VOB.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourtExists(id))
+                if (!CostExists(id))
                 {
                     return NotFound();
                 }
@@ -71,36 +68,36 @@ namespace VOB.Controllers
             return NoContent();
         }
 
-        // POST: api/Courts
+        // POST: api/Costs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Court>> PostCourt(Court court)
+        public async Task<ActionResult<Cost>> PostCost(Cost cost)
         {
-            _context.Courts.Add(court);
+            _context.Costs.Add(cost);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourt", new { id = court.Id }, court);
+            return CreatedAtAction("GetCost", new { id = cost.Id }, cost);
         }
 
-        // DELETE: api/Courts/5
+        // DELETE: api/Costs/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourt(Guid id)
+        public async Task<IActionResult> DeleteCost(Guid id)
         {
-            var court = await _context.Courts.FindAsync(id);
-            if (court == null)
+            var cost = await _context.Costs.FindAsync(id);
+            if (cost == null)
             {
                 return NotFound();
             }
 
-            _context.Courts.Remove(court);
+            _context.Costs.Remove(cost);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CourtExists(Guid id)
+        private bool CostExists(Guid id)
         {
-            return _context.Courts.Any(e => e.Id == id);
+            return _context.Costs.Any(e => e.Id == id);
         }
     }
 }

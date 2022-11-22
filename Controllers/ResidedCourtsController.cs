@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VOB.Data;
 using VOB.Data.Context;
+using VOB.Repositories;
 
 namespace VOB.Controllers
 {
@@ -23,9 +19,11 @@ namespace VOB.Controllers
 
         // GET: api/ResidedCourts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ResidedCourt>>> GetResidedCourt()
+        public async Task<ActionResult<PagedRepo<ResidedCourt>>> GetResidedCourt(int? pageIndex, int? pageSize)
         {
-            return await _context.ResidedCourt.ToListAsync();
+            var source = _context.ResidedCourt.AsQueryable();
+
+            return await PagedRepo<ResidedCourt>.PagingAsync(source, pageIndex ?? 1, pageSize ?? 6);
         }
 
         // GET: api/ResidedCourts/5
