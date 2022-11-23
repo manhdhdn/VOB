@@ -11,8 +11,8 @@ using VOB.Data.Context;
 namespace VOB.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221111023747_Initial")]
-    partial class Initial
+    [Migration("20221123132130_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -147,6 +147,66 @@ namespace VOB.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VOB.Data.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CostId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("ResidedCourtId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("money");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CostId");
+
+                    b.HasIndex("ResidedCourtId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("VOB.Data.Cost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
+                    b.Property<Guid>("ResidedCourtId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResidedCourtId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("Costs");
+                });
+
             modelBuilder.Entity("VOB.Data.Court", b =>
                 {
                     b.Property<Guid>("Id")
@@ -157,7 +217,7 @@ namespace VOB.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Describle")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -201,7 +261,7 @@ namespace VOB.Migrations
 
                     b.HasIndex("ResidedCourtId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("VOB.Data.Policy", b =>
@@ -210,7 +270,7 @@ namespace VOB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Describle")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -250,6 +310,21 @@ namespace VOB.Migrations
                     b.ToTable("ResidedCourt");
                 });
 
+            modelBuilder.Entity("VOB.Data.Unit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Unit");
+                });
+
             modelBuilder.Entity("VOB.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -260,6 +335,7 @@ namespace VOB.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -284,14 +360,17 @@ namespace VOB.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
@@ -301,12 +380,14 @@ namespace VOB.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -373,10 +454,56 @@ namespace VOB.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VOB.Data.Booking", b =>
+                {
+                    b.HasOne("VOB.Data.Cost", "Cost")
+                        .WithMany()
+                        .HasForeignKey("CostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VOB.Data.ResidedCourt", "ResidedCourt")
+                        .WithMany()
+                        .HasForeignKey("ResidedCourtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VOB.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cost");
+
+                    b.Navigation("ResidedCourt");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VOB.Data.Cost", b =>
+                {
+                    b.HasOne("VOB.Data.ResidedCourt", "ResidedCourt")
+                        .WithMany("Costs")
+                        .HasForeignKey("ResidedCourtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VOB.Data.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ResidedCourt");
+
+                    b.Navigation("Unit");
+                });
+
             modelBuilder.Entity("VOB.Data.Court", b =>
                 {
                     b.HasOne("VOB.Data.Policy", "Policy")
-                        .WithMany()
+                        .WithMany("Courts")
                         .HasForeignKey("PolicyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -417,8 +544,15 @@ namespace VOB.Migrations
                     b.Navigation("ResidedCourts");
                 });
 
+            modelBuilder.Entity("VOB.Data.Policy", b =>
+                {
+                    b.Navigation("Courts");
+                });
+
             modelBuilder.Entity("VOB.Data.ResidedCourt", b =>
                 {
+                    b.Navigation("Costs");
+
                     b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618

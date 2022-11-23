@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VOB.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,19 +30,19 @@ namespace VOB.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: false),
                     PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
                     AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -56,11 +56,23 @@ namespace VOB.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Describle = table.Column<string>(type: "TEXT", nullable: false)
+                    Description = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Policy", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Unit",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Unit", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,7 +187,7 @@ namespace VOB.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Describle = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     ContactNumber = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     PolicyId = table.Column<Guid>(type: "TEXT", nullable: false)
@@ -213,7 +225,33 @@ namespace VOB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Photo",
+                name: "Costs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Price = table.Column<decimal>(type: "money", nullable: false),
+                    UnitId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ResidedCourtId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Costs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Costs_ResidedCourt_ResidedCourtId",
+                        column: x => x.ResidedCourtId,
+                        principalTable: "ResidedCourt",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Costs_Unit_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Unit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photos",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -223,17 +261,52 @@ namespace VOB.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photo", x => x.Id);
+                    table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photo_Courts_CourtId",
+                        name: "FK_Photos_Courts_CourtId",
                         column: x => x.CourtId,
                         principalTable: "Courts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Photo_ResidedCourt_ResidedCourtId",
+                        name: "FK_Photos_ResidedCourt_ResidedCourtId",
                         column: x => x.ResidedCourtId,
                         principalTable: "ResidedCourt",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<double>(type: "REAL", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "money", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    ResidedCourtId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CostId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Costs_CostId",
+                        column: x => x.CostId,
+                        principalTable: "Costs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_ResidedCourt_ResidedCourtId",
+                        column: x => x.ResidedCourtId,
+                        principalTable: "ResidedCourt",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -274,18 +347,43 @@ namespace VOB.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bookings_CostId",
+                table: "Bookings",
+                column: "CostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ResidedCourtId",
+                table: "Bookings",
+                column: "ResidedCourtId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserId",
+                table: "Bookings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Costs_ResidedCourtId",
+                table: "Costs",
+                column: "ResidedCourtId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Costs_UnitId",
+                table: "Costs",
+                column: "UnitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Courts_PolicyId",
                 table: "Courts",
                 column: "PolicyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photo_CourtId",
-                table: "Photo",
+                name: "IX_Photos_CourtId",
+                table: "Photos",
                 column: "CourtId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photo_ResidedCourtId",
-                table: "Photo",
+                name: "IX_Photos_ResidedCourtId",
+                table: "Photos",
                 column: "ResidedCourtId");
 
             migrationBuilder.CreateIndex(
@@ -312,7 +410,10 @@ namespace VOB.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Photo");
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Photos");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -321,7 +422,13 @@ namespace VOB.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Costs");
+
+            migrationBuilder.DropTable(
                 name: "ResidedCourt");
+
+            migrationBuilder.DropTable(
+                name: "Unit");
 
             migrationBuilder.DropTable(
                 name: "Courts");

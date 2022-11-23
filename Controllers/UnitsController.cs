@@ -71,12 +71,49 @@ namespace VOB.Controllers
         // POST: api/Units
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Unit>> PostUnit(Unit unit)
+        public async Task<ActionResult<Unit>> PostUnit(string? code)
         {
-            _context.Unit.Add(unit);
-            await _context.SaveChangesAsync();
+            if (code == null)
+            {
+                return BadRequest();
+            }
 
-            return CreatedAtAction("GetUnit", new { id = unit.Id }, unit);
+            if (code.Equals("Abc@123") && !_context.Unit.Any())
+            {
+                var units = new List<Unit>
+                {
+                    new Unit()
+                    {
+                        Id = new Guid(),
+                        Name = "Ngày"
+                    },
+                    new Unit()
+                    {
+                        Id = new Guid(),
+                        Name = "Tháng"
+                    },
+                    new Unit()
+                    {
+                        Id = new Guid(),
+                        Name = "Quý"
+                    },
+                    new Unit()
+                    {
+                        Id = new Guid(),
+                        Name = "Năm"
+                    }
+                };
+
+                foreach (var unit in units)
+                {
+                    _context.Unit.Add(unit);
+                    await _context.SaveChangesAsync();
+                }
+
+                return CreatedAtAction("GetUnit", null, units);
+            }
+
+            return BadRequest();
         }
 
         //// DELETE: api/Units/5

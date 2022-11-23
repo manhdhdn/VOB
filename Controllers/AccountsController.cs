@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using VOB.Data.Context;
+﻿using Microsoft.AspNetCore.Mvc;
 using VOB.Models;
 using VOB.Repositories;
 
@@ -12,31 +10,9 @@ namespace VOB.Controllers
     {
         private readonly IAccountRepo _accountRepo;
 
-        public AccountsController(DataContext context,
-                                  IAccountRepo accountRepo)
+        public AccountsController(IAccountRepo accountRepo)
         {
             _accountRepo = accountRepo;
-        }
-
-        [HttpPost("CreateRolesBase")]
-        public async Task<IActionResult> CreateRolesBase(string? code)
-        {
-            if (code == null)
-            {
-                return BadRequest();
-            }
-
-            if (code.Equals("Abc@123"))
-            {
-                var roles = new List<string>() { "Admin", "Owner", "Player" };
-
-                foreach (var role in roles)
-                {
-                    await _accountRepo.CreateRolesAsync(role);
-                }
-            }
-
-            return Ok();
         }
 
         [HttpPost("SignUp")]

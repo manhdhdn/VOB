@@ -9,7 +9,7 @@ namespace VOB.Data
         public DateTime DateTime { get; set; }
         public double Quantity { get; set; }
         [Column(TypeName = "money")]
-        public double TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
 
         [ForeignKey("AspNetUsers")]
         public string UserId { get; set; } = null!;
