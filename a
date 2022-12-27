@@ -1,0 +1,47 @@
+[33mcommit 316c9f2d9d25aaf0904a2ab5808e067b7efa6439[m[33m ([m[1;36mHEAD -> [m[1;32mduy_nguyen[m[33m, [m[1;31morigin/duy_nguyen[m[33m)[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Mon Nov 14 11:29:22 2022 +0700
+
+    add drawer
+
+[33mcommit 6734203989e5eccc8a35a0e669a6c21536c4d761[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Sun Nov 13 11:10:34 2022 +0700
+
+    add _login_modal
+
+[33mcommit 6e03cd67b8be329523667364b2ac7bd484400cc0[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Fri Nov 11 10:40:30 2022 +0700
+
+    add_home_page
+
+[33mcommit f6ff249be6a59db440e4cecb93887c42e3c799aa[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Mon Nov 7 15:59:04 2022 +0700
+
+    setup tailwind
+
+[33mcommit e6af256231651334a5bf76406811945f12c9b5b5[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Wed Nov 2 21:39:52 2022 +0700
+
+    setup_project
+
+[33mcommit 20f295d01e3d9192fdfe2c54a70fd7f30f763e44[m
+Author: duy-nhat-1 <duyisdenhat@gmail.com>
+Date:   Wed Nov 2 21:27:31 2022 +0700
+
+    test_git
+
+[33mcommit 7e80a978a11ae800df6198d826f3a22bf2727c1d[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32mdev[m[33m)[m
+Author: manhdhdn <huumanh.bmt.dn@gmail.com>
+Date:   Tue Nov 1 09:11:14 2022 +0700
+
+    Add project files.
+
+[33mcommit c91f085132c46a1dbf548fe5df41d8c3cf267660[m
+Author: manhdhdn <huumanh.bmt.dn@gmail.com>
+Date:   Tue Nov 1 09:10:42 2022 +0700
+
+    Add .gitattributes.
