@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoutes';
-import { Layout } from './components/Layout';
-import './custom.css';
+import React from 'react';
+// import Saleoffcourt from './components/Badminton_court/SaleoffCourt';
+// import Topbadminton from './components/Badminton_court/TopBadminton';
+// import Header from './components/Header/Header';
 
-export default class App extends Component {
-  static displayName = App.name;
+// import BadmintonRacket from './components/Sportequipment/BadmintonRacket';
+// import Stats from './components/Stats/Stats';
+import ListCourt from './components/Badminton_court/ListCourt';
+function App() {
+  return (
+    <div className='App justify-center'>
+     {/* <Header/>
+     <Stats/>
+     <Topbadminton/>
+     <Saleoffcourt/>
+     <BadmintonRacket/> */}
+    <ListCourt/>
+    </div>
 
-  render() {
-    return (
-      <Layout>
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-      </Layout>
-    );
-  }
+  );
 }
+
+export default App;
