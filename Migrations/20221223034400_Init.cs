@@ -190,11 +190,18 @@ namespace VOB.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     ContactNumber = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
-                    PolicyId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    PolicyId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Courts_Policy_PolicyId",
                         column: x => x.PolicyId,
@@ -377,6 +384,11 @@ namespace VOB.Migrations
                 column: "PolicyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Courts_UserId",
+                table: "Courts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Photos_CourtId",
                 table: "Photos",
                 column: "CourtId");
@@ -419,9 +431,6 @@ namespace VOB.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Costs");
 
             migrationBuilder.DropTable(
@@ -432,6 +441,9 @@ namespace VOB.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courts");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Policy");

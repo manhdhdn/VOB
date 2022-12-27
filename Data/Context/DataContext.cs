@@ -4,7 +4,7 @@ using VOB.Models;
 
 namespace VOB.Data.Context
 {
-    public class DataContext : IdentityDbContext<ApplicationUser>
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) 
             : base(options)

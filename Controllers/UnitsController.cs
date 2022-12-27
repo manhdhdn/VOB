@@ -85,18 +85,27 @@ namespace VOB.Controllers
                     new Unit()
                     {
                         Id = new Guid(),
+                        Name = "Giờ"
+                    },
+
+                    new Unit()
+                    {
+                        Id = new Guid(),
                         Name = "Ngày"
                     },
+
                     new Unit()
                     {
                         Id = new Guid(),
                         Name = "Tháng"
                     },
+
                     new Unit()
                     {
                         Id = new Guid(),
                         Name = "Quý"
                     },
+
                     new Unit()
                     {
                         Id = new Guid(),

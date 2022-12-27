@@ -9,13 +9,13 @@ namespace VOB.Repositories
 {
     public class AccountRepo : IAccountRepo
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AccountRepo(UserManager<ApplicationUser> userManager,
-                           SignInManager<ApplicationUser> signInManager,
+        public AccountRepo(UserManager<User> userManager,
+                           SignInManager<User> signInManager,
                            RoleManager<IdentityRole> roleManager,
                            IConfiguration configuration)
         {
@@ -27,17 +27,17 @@ namespace VOB.Repositories
 
         public async Task CreateRolesAsync(string roleName)
         {
-            var roleExit = await _roleManager.RoleExistsAsync(roleName);
+            var roleExist = await _roleManager.RoleExistsAsync(roleName);
 
-            if (!roleExit)
+            if (!roleExist)
             {
                 await _roleManager.CreateAsync(new IdentityRole(roleName));
             }
         }
 
-        public async Task<IdentityResult> SignUp(SignUpModel signUp)
+        public async Task<IdentityResult> SignUpAsync(SignUpModel signUp)
         {
-            var user = new ApplicationUser()
+            var user = new User()
             {
                 UserName = signUp.Email,
                 Email = signUp.Email,
@@ -56,19 +56,17 @@ namespace VOB.Repositories
             return result;
         }
 
-        public async Task<SignInRs?> SignIn(string email, string password)
+        public async Task<SignInRs?> SignInAsync(string email, string password)
         {
             var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
 
             if (!result.Succeeded)
             {
-                return result.IsNotAllowed ?
-                    new SignInRs()
-                    {
-                        User = null,
-                        Token = "Require confirmed account"
-                    }
-                    : null;
+                return new SignInRs()
+                {
+                    User = null,
+                    Token = result.ToString()
+                };
             }
 
             var user = await _userManager.FindByEmailAsync(email);
@@ -78,7 +76,7 @@ namespace VOB.Repositories
             {
                 new Claim(ClaimTypes.Name, email),
                 new Claim(ClaimTypes.Role, roleName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) //Guid
             };
 
             var authSignKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

@@ -18,7 +18,7 @@ namespace VOB.Controllers
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
         {
-            var result = await _accountRepo.SignUp(signUpModel);
+            var result = await _accountRepo.SignUpAsync(signUpModel);
 
             if (!result.Succeeded)
             {
@@ -36,7 +36,7 @@ namespace VOB.Controllers
         [HttpPost("SignIn")]
         public async Task<ActionResult<SignInRs>> SignIn(SignInModel signInModel)
         {
-            var result = await _accountRepo.SignIn(signInModel.Email, signInModel.Password);
+            var result = await _accountRepo.SignInAsync(signInModel.Email, signInModel.Password);
 
             if (result == null)
             {

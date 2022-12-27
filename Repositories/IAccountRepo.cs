@@ -6,7 +6,7 @@ namespace VOB.Repositories
     public interface IAccountRepo
     {
         Task CreateRolesAsync(string roleName);
-        Task<IdentityResult> SignUp(SignUpModel signUp);
-        Task<SignInRs?> SignIn(string email, string password);
+        Task<IdentityResult> SignUpAsync(SignUpModel signUp);
+        Task<SignInRs?> SignInAsync(string email, string password);
     }
 }
