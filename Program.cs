@@ -17,26 +17,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Swagger (API friendly view) and author test for BE
-builder.Services.AddSwaggerGen(option =>
+builder.Services.AddSwaggerGen(options =>
 {
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT"
     });
-    option.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
-    option.OperationFilter<AuthorizationOperationFilter>();
+    options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+    options.OperationFilter<AuthorizationOperationFilter>();
 });
 
 // Add Database
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<DataContext>(option =>
+    option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Add Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<User, IdentityRole>(option => option.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add transient, cope here
+// Add transient, scope here
 builder.Services.AddTransient<IAccountRepo, AccountRepo>();
 
 var app = builder.Build();

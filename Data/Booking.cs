@@ -13,7 +13,7 @@ namespace VOB.Data
 
         [ForeignKey("AspNetUsers")]
         public string UserId { get; set; } = null!;
-        public virtual ApplicationUser? User { get; set; }
+        public virtual User? User { get; set; }
 
         [ForeignKey("ResidedCourt")]
         public Guid ResidedCourtId { get; set; }

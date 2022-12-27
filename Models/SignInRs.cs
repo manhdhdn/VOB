@@ -2,7 +2,7 @@
 {
     public class SignInRs
     {
-        public ApplicationUser? User { get; set; }
+        public User? User { get; set; }
         public string Token { get; set; } = null!;
     }
 }

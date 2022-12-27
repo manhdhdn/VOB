@@ -11,7 +11,7 @@ using VOB.Data.Context;
 namespace VOB.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221123132130_Init")]
+    [Migration("20221223034400_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,9 +232,15 @@ namespace VOB.Migrations
                     b.Property<Guid>("PolicyId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PolicyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Courts");
                 });
@@ -325,7 +331,7 @@ namespace VOB.Migrations
                     b.ToTable("Unit");
                 });
 
-            modelBuilder.Entity("VOB.Models.ApplicationUser", b =>
+            modelBuilder.Entity("VOB.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -414,7 +420,7 @@ namespace VOB.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("VOB.Models.ApplicationUser", null)
+                    b.HasOne("VOB.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -423,7 +429,7 @@ namespace VOB.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("VOB.Models.ApplicationUser", null)
+                    b.HasOne("VOB.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +444,7 @@ namespace VOB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VOB.Models.ApplicationUser", null)
+                    b.HasOne("VOB.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -447,7 +453,7 @@ namespace VOB.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("VOB.Models.ApplicationUser", null)
+                    b.HasOne("VOB.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -468,7 +474,7 @@ namespace VOB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VOB.Models.ApplicationUser", "User")
+                    b.HasOne("VOB.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -508,7 +514,15 @@ namespace VOB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("VOB.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Policy");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VOB.Data.Photo", b =>

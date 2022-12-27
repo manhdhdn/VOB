@@ -88,12 +88,14 @@ namespace VOB.Controllers
                         Name = "Linh hoạt",
                         Description = "Quý khách hàng có thể hủy lịch đặt sân trong vòng 24h trước khi đến hẹn sử dụng sân và sẽ được hoàn trả 100% số tiền đã thanh toán trên hệ thống. Trong trường hợp không đến sân như đã đặt lịch hẹn trước, quý khách sẽ được hoàn trả 50% số tiền đã thanh toán."
                     },
+
                     new Policy()
                     {
                         Id = new Guid(),
                         Name = "Phổ thông",
                         Description = "Quý khách hàng có thể hủy lịch đặt sân trong vòng 120h (tức 5 ngày) trước khi đến hẹn sử dụng sân và sẽ được hoàn trả 100% số tiền đã thanh toán trên hệ thống. Trong trường hợp không đến sân như đã đặt lịch hẹn trước, quý khách sẽ được hoàn trả 30% số tiền đã thanh toán."
                     },
+
                     new Policy()
                     {
                         Id = new Guid(),

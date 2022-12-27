@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using VOB.Models;
 
 namespace VOB.Data
 {
@@ -16,6 +17,10 @@ namespace VOB.Data
         [ForeignKey("Policy")]
         public Guid PolicyId { get; set; }
         public virtual Policy? Policy { get; set; }
+
+        [ForeignKey("AspNetUser")]
+        public string UserId { get; set; } = null!;
+        public virtual User? User { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public virtual ICollection<ResidedCourt>? ResidedCourts { get; set; }

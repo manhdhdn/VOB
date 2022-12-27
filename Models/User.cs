@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace VOB.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class User : IdentityUser
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
